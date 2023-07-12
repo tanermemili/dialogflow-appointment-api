@@ -7,5 +7,6 @@
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <include file="001-test-table.xml" relativeToChangelogFile="true"/>
+    <include file="002-patient-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

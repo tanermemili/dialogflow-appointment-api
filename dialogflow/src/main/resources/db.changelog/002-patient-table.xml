@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="002-patient-table" author="">
+        <createSequence sequenceName="patient_seq"/>
+        <createTable tableName="patient">
+            <column name="id" type="integer" defaultValueSequenceNext="patient_seq">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="character varying"/>
+            <column name="last_name" type="character varying"/>
+            <column name="insurance_number" type="integer">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="weekday" type="character varying"/>
+            <column name="time" type="character varying"/>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="002-patient-table-data" author="">
+        <insert tableName="patient">
+            <column name="first_name" value="Tom"/>
+            <column name="last_name" value="Smith"/>
+            <column name="insurance_number" value="123456789"/>
+            <column name="weekday" value="monday"/>
+            <column name="time" value="8:00"/>
+        </insert>
+
+        <insert tableName="patient">
+            <column name="first_name" value="Sarah"/>
+            <column name="last_name" value="Ellington"/>
+            <column name="insurance_number" value="987654321"/>
+        </insert>
+
+        <insert tableName="patient">
+            <column name="first_name" value="Anna"/>
+            <column name="last_name" value="Williams"/>
+            <column name="insurance_number" value="876192834"/>
+            <column name="weekday" value="tuesday"/>
+            <column name="time" value="9:30"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

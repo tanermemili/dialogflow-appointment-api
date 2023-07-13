@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="003-schedule-table" author="">
+        <createSequence sequenceName="schedule_seq"/>
+        <createTable tableName="schedule">
+            <column name="id" type="integer" defaultValueSequenceNext="schedule_seq">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="weekday" type="character varying"/>
+            <column name="eight" type="boolean"/>
+            <column name="eight_thirty" type="boolean"/>
+            <column name="nine" type="boolean"/>
+            <column name="fifteen" type="boolean"/>
+            <column name="fifteen_thirty" type="boolean"/>
+        </createTable>
+
+    </changeSet>
+
+    <changeSet id="003-schedule-table-data" author="">
+        <insert tableName="schedule">
+            <column name="weekday" value="monday"/>
+            <column name="eight" value="false"/>
+            <column name="eight_thirty" value="true"/>
+            <column name="nine" value="false"/>
+            <column name="fifteen" value="false"/>
+            <column name="fifteen_thirty" value="false"/>
+        </insert>
+
+        <insert tableName="schedule">
+            <column name="weekday" value="tuesday"/>
+            <column name="eight" value="false"/>
+            <column name="eight_thirty" value="false"/>
+            <column name="nine" value="false"/>
+            <column name="fifteen" value="false"/>
+            <column name="fifteen_thirty" value="true"/>
+        </insert>
+
+        <insert tableName="schedule">
+            <column name="weekday" value="wednesday"/>
+            <column name="eight" value="true"/>
+            <column name="eight_thirty" value="true"/>
+            <column name="nine" value="true"/>
+            <column name="fifteen" value="true"/>
+            <column name="fifteen_thirty" value="true"/>
+        </insert>
+
+        <insert tableName="schedule">
+            <column name="weekday" value="thursday"/>
+            <column name="eight" value="true"/>
+            <column name="eight_thirty" value="true"/>
+            <column name="nine" value="false"/>
+            <column name="fifteen" value="false"/>
+            <column name="fifteen_thirty" value="false"/>
+        </insert>
+
+        <insert tableName="schedule">
+            <column name="weekday" value="friday"/>
+            <column name="eight" value="true"/>
+            <column name="eight_thirty" value="true"/>
+            <column name="nine" value="false"/>
+            <column name="fifteen" value="true"/>
+            <column name="fifteen_thirty" value="true"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

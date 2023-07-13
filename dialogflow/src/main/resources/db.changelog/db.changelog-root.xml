@@ -8,5 +8,6 @@
 
     <include file="001-test-table.xml" relativeToChangelogFile="true"/>
     <include file="002-patient-table.xml" relativeToChangelogFile="true"/>
+    <include file="003-schedule-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

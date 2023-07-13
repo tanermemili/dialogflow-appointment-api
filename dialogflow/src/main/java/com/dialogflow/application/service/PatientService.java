@@ -19,6 +19,10 @@ import java.util.stream.Collectors;
 public class PatientService {
     private final PatientRepository patientRepository;
 
+    public List<Patient> findPatientsAsList() {
+        return patientRepository.findAll();
+    }
+
     public String findPatients() {
         String responseText = "";
 
@@ -61,7 +65,7 @@ public class PatientService {
             }
         }
 
-        return "placeholder";
+        return "You don't have an appointment yet. Do you want set one up?";
     }
 
     public String deletePatient(GoogleCloudDialogflowV2WebhookRequest request) {

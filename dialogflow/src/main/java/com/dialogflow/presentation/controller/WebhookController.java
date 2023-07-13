@@ -4,10 +4,7 @@ import com.dialogflow.application.service.PatientService;
 import com.dialogflow.domain.entity.Patient;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.dialogflow.v3.model.GoogleCloudDialogflowV2IntentMessage;
-import com.google.api.services.dialogflow.v3.model.GoogleCloudDialogflowV2IntentMessageText;
-import com.google.api.services.dialogflow.v3.model.GoogleCloudDialogflowV2WebhookRequest;
-import com.google.api.services.dialogflow.v3.model.GoogleCloudDialogflowV2WebhookResponse;
+import com.google.api.services.dialogflow.v3.model.*;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -47,6 +44,7 @@ public class WebhookController {
 
         switch (intentName) {
             case "getAllPatients" -> { responseText = patientService.findPatients(); }
+            case "NameAndInsuranceYes" -> { responseText = patientService.findPatient(request); }
             default -> { responseText = "I'm sorry, I don't understand your request."; }
         }
 

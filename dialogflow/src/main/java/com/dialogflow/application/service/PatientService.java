@@ -2,11 +2,15 @@ package com.dialogflow.application.service;
 
 import com.dialogflow.domain.entity.Patient;
 import com.dialogflow.infrastructure.repository.PatientRepository;
+import com.google.api.services.dialogflow.v3.model.GoogleCloudDialogflowV2Context;
+import com.google.api.services.dialogflow.v3.model.GoogleCloudDialogflowV2WebhookRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,5 +35,32 @@ public class PatientService {
         }
 
         return responseText;
+    }
+
+    public String findPatient(GoogleCloudDialogflowV2WebhookRequest request) {
+        List<GoogleCloudDialogflowV2Context> outputContext = request.getQueryResult().getOutputContexts();
+
+        for (GoogleCloudDialogflowV2Context context : outputContext) {
+            String contextName = context.getName();
+
+            if (contextName.contains("await_info")) {
+                Map<String, Object> parameters = context.getParameters();
+
+                String numberString = (String)(parameters.get("number.original"));
+                int insuranceNumber = Integer.parseInt(numberString);
+
+                Optional<Patient> patient = patientRepository.findPatientByInsuranceNumber(insuranceNumber);
+
+                if (!patient.isEmpty()) {
+                    Patient patientData = patient.get();
+
+                    return "It seems like you already have an appointment on " + patientData.getWeekday()
+                            + " at " + patientData.getTime() + ".\n\nDo you want to reschedule your appointment or" +
+                            " do you want to cancel it?";
+                }
+            }
+        }
+
+        return "placeholder";
     }
 }

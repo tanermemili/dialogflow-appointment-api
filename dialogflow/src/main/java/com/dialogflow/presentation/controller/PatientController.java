@@ -17,9 +17,10 @@ import java.util.List;
 public class PatientController {
     private final PatientService userService;
 
+/*
     @Operation(summary = "find all patients")
     @GetMapping("/all")
     public ResponseEntity<List<Patient>> findPatients() {
         return ResponseEntity.ok(userService.findPatients());
-    }
+    }*/
 }

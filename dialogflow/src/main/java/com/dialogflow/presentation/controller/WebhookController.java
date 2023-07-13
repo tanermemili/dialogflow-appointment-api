@@ -45,23 +45,9 @@ public class WebhookController {
         String intentName = request.getQueryResult().getIntent().getDisplayName();
         String responseText;
 
-        if (intentName.equals("getAllPatients")) {
-            // Retrieve all patients from the repository
-            List<Patient> patients = patientService.findPatients();
-
-            // Extract the names of the patients
-            List<String> patientNames = patients.stream()
-                    .map(Patient::getFirstName)
-                    .collect(Collectors.toList());
-
-            if (!patientNames.isEmpty()) {
-                responseText = "The names of all patients are: " + String.join(", ", patientNames);
-            } else {
-                responseText = "There are no patients in the database.";
-            }
-        } else {
-            // Handle other intents or unknown intents
-            responseText = "I'm sorry, I don't understand your request.";
+        switch (intentName) {
+            case "getAllPatients" -> { responseText = patientService.findPatients(); }
+            default -> { responseText = "I'm sorry, I don't understand your request."; }
         }
 
         //Step 3. Build the response message

@@ -6,11 +6,12 @@ import com.google.api.services.dialogflow.v3.model.GoogleCloudDialogflowV2Intent
 import com.google.api.services.dialogflow.v3.model.GoogleCloudDialogflowV2IntentMessageText;
 import com.google.api.services.dialogflow.v3.model.GoogleCloudDialogflowV2WebhookRequest;
 import com.google.api.services.dialogflow.v3.model.GoogleCloudDialogflowV2WebhookResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -21,11 +22,13 @@ import static java.util.Arrays.asList;
 
 @RestController
 @RequiredArgsConstructor
-public class DialogFlowWebhookController {
+@RequestMapping("/api")
+public class WebhookController {
 
     private final JacksonFactory jacksonFactory;
 
-    @PostMapping(value = "/dialogflow-webhook", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @Operation(summary = "The webhook for dialogflow")
+    @PostMapping(value = "/webhook", produces = {MediaType.APPLICATION_JSON_VALUE})
     public String webhook(@RequestBody String rawData) throws IOException {
         //Step 1. Parse the request
         GoogleCloudDialogflowV2WebhookRequest request = jacksonFactory

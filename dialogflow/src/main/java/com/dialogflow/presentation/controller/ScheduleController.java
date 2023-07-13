@@ -20,7 +20,13 @@ public class ScheduleController {
 
     @Operation(summary = "find all patients")
     @GetMapping("/all")
-    public ResponseEntity<List<Schedule>> findPatients() {
+    public ResponseEntity<List<Schedule>> findSchedulesAsList() {
         return ResponseEntity.ok(scheduleService.findSchedulesAsList());
+    }
+
+    @Operation(summary = "find the top two schedules with the most available capacity")
+    @GetMapping("/toptwo")
+    public ResponseEntity<List<Schedule>> findTopTwoSchedulesAsList() {
+        return ResponseEntity.ok(scheduleService.findTopTwoSchedulesAsList());
     }
 }

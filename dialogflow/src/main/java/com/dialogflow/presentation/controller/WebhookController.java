@@ -1,6 +1,7 @@
 package com.dialogflow.presentation.controller;
 
 import com.dialogflow.application.service.PatientService;
+import com.dialogflow.application.service.ScheduleService;
 import com.dialogflow.domain.entity.Patient;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -29,6 +30,7 @@ public class WebhookController {
     private final JacksonFactory jacksonFactory;
 
     private final PatientService patientService;
+    private final ScheduleService scheduleService;
 
     @Operation(summary = "The webhook for dialogflow")
     @PostMapping(value = "/webhook", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -38,7 +40,7 @@ public class WebhookController {
                 .createJsonParser(rawData)
                 .parse(GoogleCloudDialogflowV2WebhookRequest.class);
 
-        //Step 2. Process the request
+        //Step 2. Determine the intent of the request
         String intentName = request.getQueryResult().getIntent().getDisplayName();
         String responseText;
 
@@ -46,7 +48,7 @@ public class WebhookController {
             case "getAllPatients" -> { responseText = patientService.findPatients(); }
             case "NameAndInsuranceYes" -> { responseText = patientService.findPatient(request); }
             case "NameAndInsuranceYesCancel" -> { responseText = patientService.deletePatient(request); }
-            case "NameAndInsuranceYesSchedule" -> { responseText = ""; }
+            case "NameAndInsuranceYesSchedule" -> { responseText = scheduleService.findTopTwoSchedules(); }
             default -> { responseText = "I'm sorry, I don't understand your request."; }
         }
 

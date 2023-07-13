@@ -17,4 +17,21 @@ public class ScheduleService {
     public List<Schedule> findSchedulesAsList() {
         return scheduleRepository.findAll();
     }
+
+    public List<Schedule> findTopTwoSchedulesAsList() {
+        return scheduleRepository.findTopTwoSchedules();
+    }
+
+    public String findTopTwoSchedules() {
+        String responseText = "";
+
+        List<Schedule> schedules = scheduleRepository.findTopTwoSchedules();
+
+        int freeScheduleSlots = 0;
+
+        for (Schedule schedule : schedules) {
+
+        }
+        return "";
+    }
 }

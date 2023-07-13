@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, Integer> {
     Optional<Patient> findPatientByInsuranceNumber(int insuranceNumber);
+
+    void deletePatientByInsuranceNumber(int insuranceNumber);
 }

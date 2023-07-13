@@ -55,12 +55,34 @@ public class PatientService {
                     Patient patientData = patient.get();
 
                     return "It seems like you already have an appointment on " + patientData.getWeekday()
-                            + " at " + patientData.getTime() + ".\n\nDo you want to reschedule your appointment or" +
+                            + " at " + patientData.getTime() + ".Do you want to reschedule your appointment or" +
                             " do you want to cancel it?";
                 }
             }
         }
 
         return "placeholder";
+    }
+
+    public String deletePatient(GoogleCloudDialogflowV2WebhookRequest request) {
+        List<GoogleCloudDialogflowV2Context> outputContext = request.getQueryResult().getOutputContexts();
+
+        Patient patient = null;
+        for (GoogleCloudDialogflowV2Context context : outputContext) {
+            String contextName = context.getName();
+
+            if (contextName.contains("await_info")) {
+                Map<String, Object> parameters = context.getParameters();
+
+                String numberString = (String)(parameters.get("number.original"));
+                int insuranceNumber = Integer.parseInt(numberString);
+
+                patient = patientRepository.findPatientByInsuranceNumber(insuranceNumber).get();
+                patientRepository.deletePatientByInsuranceNumber(insuranceNumber);
+            }
+        }
+
+        return "Your appointment " + patient.getWeekday() + " at " + patient.getTime()
+                + " has been successfully canceled! Thank you for using our service. Have a nice day!";
     }
 }

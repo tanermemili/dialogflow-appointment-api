@@ -45,6 +45,7 @@ public class WebhookController {
         switch (intentName) {
             case "getAllPatients" -> { responseText = patientService.findPatients(); }
             case "NameAndInsuranceYes" -> { responseText = patientService.findPatient(request); }
+            case "NameAndInsuranceYesCancel" -> { responseText = patientService.deletePatient(request); }
             default -> { responseText = "I'm sorry, I don't understand your request."; }
         }
 

@@ -15,11 +15,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/patient")
 public class PatientController {
-    private final PatientService userService;
+    private final PatientService patientService;
+
 
     @Operation(summary = "find all patients")
     @GetMapping("/all")
     public ResponseEntity<List<Patient>> findPatients() {
-        return ResponseEntity.ok(userService.findPatients());
+        return ResponseEntity.ok(patientService.findPatientsAsList());
     }
 }

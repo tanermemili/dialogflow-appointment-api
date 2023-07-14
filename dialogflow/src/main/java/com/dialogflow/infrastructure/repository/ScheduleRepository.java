@@ -2,7 +2,9 @@ package com.dialogflow.infrastructure.repository;
 
 import com.dialogflow.domain.entity.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,4 +22,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
             "ORDER BY false_count desc " +
             "LIMIT 2", nativeQuery = true)
     List<Schedule> findTopTwoSchedules();
+
+    Schedule findScheduleByWeekday(String weekday);
 }

@@ -22,6 +22,22 @@ public class ScheduleService {
         return scheduleRepository.findTopTwoSchedules();
     }
 
+    public Schedule UpdateScheduleByWeekdayAndTime(String weekday, String time) {
+        Schedule schedule = scheduleRepository.findScheduleByWeekday(weekday);
+
+        switch (time) {
+            case "08:00" -> schedule.setEight(false);
+            case "08:30" -> schedule.setEightThirty(false);
+            case "09:00" -> schedule.setNine(false);
+            case "15:00" -> schedule.setFifteen(false);
+            case "15:30" -> schedule.setFifteenThirty(false);
+        }
+
+        scheduleRepository.saveAndFlush(schedule);
+
+        return schedule;
+    }
+
     public String findTopTwoSchedules() {
         List<Schedule> schedules = scheduleRepository.findTopTwoSchedules();
 

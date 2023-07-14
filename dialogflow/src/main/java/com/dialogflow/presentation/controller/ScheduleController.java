@@ -6,9 +6,7 @@ import com.dialogflow.domain.entity.Schedule;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +26,12 @@ public class ScheduleController {
     @GetMapping("/toptwo")
     public ResponseEntity<List<Schedule>> findTopTwoSchedulesAsList() {
         return ResponseEntity.ok(scheduleService.findTopTwoSchedulesAsList());
+    }
+
+    @Operation(summary = "Check if the schedule by weekday and time is occupied")
+    @PatchMapping()
+    public ResponseEntity<Schedule> UpdateScheduleByWeekdayAndTime(@RequestParam String weekday,
+                                                                   @RequestParam String time) {
+        return ResponseEntity.ok(scheduleService.UpdateScheduleByWeekdayAndTime(weekday, time));
     }
 }

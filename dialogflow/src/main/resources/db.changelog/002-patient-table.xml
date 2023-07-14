@@ -27,7 +27,7 @@
             <column name="first_name" value="Tom"/>
             <column name="insurance_number" value="123456789"/>
             <column name="weekday" value="Monday"/>
-            <column name="time" value="8:30"/>
+            <column name="time" value="08:30"/>
         </insert>
 
         <insert tableName="patient">
@@ -41,7 +41,7 @@
             <column name="first_name" value="Anna"/>
             <column name="insurance_number" value="678745909"/>
             <column name="weekday" value="Wednesday"/>
-            <column name="time" value="8:00"/>
+            <column name="time" value="08:00"/>
         </insert>
 
         <insert tableName="patient">
@@ -55,7 +55,7 @@
             <column name="first_name" value="Frank"/>
             <column name="insurance_number" value="154311775"/>
             <column name="weekday" value="Wednesday"/>
-            <column name="time" value="9:00"/>
+            <column name="time" value="09:00"/>
         </insert>
 
         <insert tableName="patient">

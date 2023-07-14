@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class PatientService {
     private final PatientRepository patientRepository;
+    private final ScheduleService scheduleService;
 
     public List<Patient> findPatientsAsList() {
         return patientRepository.findAll();
@@ -58,6 +59,15 @@ public class PatientService {
                 if (!patient.isEmpty()) {
                     Patient patientData = patient.get();
 
+                    String timeString = switch (patientData.getTime()) {
+                        case "08:00" -> "eight";
+                        case "08:30" -> "eight_thirty";
+                        case "09:00" -> "nine";
+                        case "15:00" -> "fifteen";
+                        case "15:30" -> "fifteen_thirty";
+                        default -> "ERROR could non determine you appointment!";
+                    };
+
                     return "It seems like you already have an appointment on " + patientData.getWeekday()
                             + " at " + patientData.getTime() + ".Do you want to reschedule your appointment or" +
                             " do you want to cancel it?";
@@ -83,6 +93,8 @@ public class PatientService {
 
                 patient = patientRepository.findPatientByInsuranceNumber(insuranceNumber).get();
                 patientRepository.deletePatientByInsuranceNumber(insuranceNumber);
+
+                scheduleService.UpdateScheduleByWeekdayAndTime(patient.getWeekday(), patient.getTime());
             }
         }
 

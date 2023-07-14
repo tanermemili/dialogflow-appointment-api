@@ -13,7 +13,6 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="first_name" type="character varying"/>
-            <column name="last_name" type="character varying"/>
             <column name="insurance_number" type="integer">
                 <constraints unique="true" nullable="false"/>
             </column>
@@ -26,24 +25,93 @@
     <changeSet id="002-patient-table-data" author="">
         <insert tableName="patient">
             <column name="first_name" value="Tom"/>
-            <column name="last_name" value="Smith"/>
             <column name="insurance_number" value="123456789"/>
-            <column name="weekday" value="monday"/>
-            <column name="time" value="8:00"/>
+            <column name="weekday" value="Monday"/>
+            <column name="time" value="8:30"/>
         </insert>
 
         <insert tableName="patient">
             <column name="first_name" value="Sarah"/>
-            <column name="last_name" value="Ellington"/>
             <column name="insurance_number" value="987654321"/>
+            <column name="weekday" value="Tuesday"/>
+            <column name="time" value="15:30"/>
         </insert>
 
         <insert tableName="patient">
             <column name="first_name" value="Anna"/>
-            <column name="last_name" value="Williams"/>
-            <column name="insurance_number" value="876192834"/>
-            <column name="weekday" value="tuesday"/>
-            <column name="time" value="9:30"/>
+            <column name="insurance_number" value="678745909"/>
+            <column name="weekday" value="Wednesday"/>
+            <column name="time" value="8:00"/>
+        </insert>
+
+        <insert tableName="patient">
+            <column name="first_name" value="John"/>
+            <column name="insurance_number" value="792451880"/>
+            <column name="weekday" value="Wednesday"/>
+            <column name="time" value="8:30"/>
+        </insert>
+
+        <insert tableName="patient">
+            <column name="first_name" value="Frank"/>
+            <column name="insurance_number" value="154311775"/>
+            <column name="weekday" value="Wednesday"/>
+            <column name="time" value="9:00"/>
+        </insert>
+
+        <insert tableName="patient">
+            <column name="first_name" value="Olivia"/>
+            <column name="insurance_number" value="627213434"/>
+            <column name="weekday" value="Wednesday"/>
+            <column name="time" value="15:00"/>
+        </insert>
+
+        <insert tableName="patient">
+            <column name="first_name" value="Mia"/>
+            <column name="insurance_number" value="887872985"/>
+            <column name="weekday" value="Wednesday"/>
+            <column name="time" value="15:30"/>
+        </insert>
+
+        <insert tableName="patient">
+            <column name="first_name" value="William"/>
+            <column name="insurance_number" value="224960613"/>
+            <column name="weekday" value="Thursday"/>
+            <column name="time" value="08:00"/>
+        </insert>
+
+        <insert tableName="patient">
+            <column name="first_name" value="Daniel"/>
+            <column name="insurance_number" value="477695333"/>
+            <column name="weekday" value="Thursday"/>
+            <column name="time" value="08:30"/>
+        </insert>
+
+        <insert tableName="patient">
+            <column name="first_name" value="Sophia"/>
+            <column name="insurance_number" value="546233502"/>
+            <column name="weekday" value="Friday"/>
+            <column name="time" value="08:00"/>
+        </insert>
+
+        <insert tableName="patient">
+            <column name="first_name" value="Emma"/>
+            <column name="insurance_number" value="965365702"/>
+            <column name="weekday" value="Friday"/>
+            <column name="time" value="08:30"/>
+        </insert>
+
+        <insert tableName="patient">
+            <column name="first_name" value="Leon"/>
+            <column name="insurance_number" value="760419381"/>
+            <column name="weekday" value="Friday"/>
+            <column name="time" value="15:00"/>
+        </insert>
+
+        <insert tableName="patient">
+            <column name="first_name" value="Julian"/>
+            <column name="insurance_number" value="518717313"/>
+            <column name="weekday" value="Friday"/>
+            <column name="time" value="15:30"/>
         </insert>
     </changeSet>
 

@@ -59,4 +59,8 @@ public class ScheduleService {
 
         return responseText.toString();
     }
+
+    public String UpdateScheduleByNewAppointment() {
+        return "";
+    }
 }

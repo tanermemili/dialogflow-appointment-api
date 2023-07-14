@@ -99,6 +99,7 @@ public class PatientService {
         }
 
         return "Your appointment " + patient.getWeekday() + " at " + patient.getTime()
-                + " has been successfully canceled! Thank you for using our service. Have a nice day!";
+                + " has been successfully canceled! Thank you for using our service. Have a nice day "
+                + patient.getFirstName() + "!";
     }
 }

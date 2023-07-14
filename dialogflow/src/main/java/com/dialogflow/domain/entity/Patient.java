@@ -16,8 +16,6 @@ public class Patient {
 
     private String firstName;
 
-    private String lastName;
-
     private Integer insuranceNumber;
 
     private String weekday;

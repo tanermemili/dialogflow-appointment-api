@@ -120,8 +120,13 @@ public class PatientService {
                 String weekday = (String)parameters.get("weekday");
                 String time = (String)parameters.get("timeslot");
 
-                scheduleService.SetScheduleToTrueByWeekdayAndTime(weekday, time);
+                Optional<Patient> checkOccupiedSlot = patientRepository.findPatientByWeekdayAndTime(weekday, time);
 
+                if (checkOccupiedSlot.isPresent()) {
+                    return "I'm very sorry, but the timeslot on " + weekday + " at " + time + " is already reserved.";
+                }
+
+                scheduleService.SetScheduleToTrueByWeekdayAndTime(weekday, time);
 
                 patient = new Patient(firstName, insuranceNumber, weekday, time);
 

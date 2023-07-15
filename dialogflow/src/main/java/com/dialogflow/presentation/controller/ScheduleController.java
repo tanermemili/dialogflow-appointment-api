@@ -1,7 +1,6 @@
 package com.dialogflow.presentation.controller;
 
 import com.dialogflow.application.service.ScheduleService;
-import com.dialogflow.domain.entity.Patient;
 import com.dialogflow.domain.entity.Schedule;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +31,6 @@ public class ScheduleController {
     @PatchMapping()
     public ResponseEntity<Schedule> UpdateScheduleByWeekdayAndTime(@RequestParam String weekday,
                                                                    @RequestParam String time) {
-        return ResponseEntity.ok(scheduleService.UpdateScheduleByWeekdayAndTime(weekday, time));
+        return ResponseEntity.ok(scheduleService.SetScheduleToFalseByWeekdayAndTime(weekday, time));
     }
 }

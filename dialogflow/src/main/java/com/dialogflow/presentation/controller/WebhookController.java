@@ -49,6 +49,7 @@ public class WebhookController {
             case "NameAndInsuranceYes" -> { responseText = patientService.findPatient(request); }
             case "NameAndInsuranceYesCancel" -> { responseText = patientService.deletePatient(request); }
             case "NameAndInsuranceYesSchedule" -> { responseText = scheduleService.findTopTwoSchedules(); }
+            case "NameAndInsuranceYesScheduleBooking" -> { responseText = patientService.addPatient(request); }
             default -> { responseText = "I'm sorry, I don't understand your request."; }
         }
 

@@ -22,7 +22,7 @@ public class ScheduleService {
         return scheduleRepository.findTopTwoSchedules();
     }
 
-    public Schedule UpdateScheduleByWeekdayAndTime(String weekday, String time) {
+    public Schedule SetScheduleToFalseByWeekdayAndTime(String weekday, String time) {
         Schedule schedule = scheduleRepository.findScheduleByWeekday(weekday);
 
         switch (time) {
@@ -31,6 +31,37 @@ public class ScheduleService {
             case "09:00" -> schedule.setNine(false);
             case "15:00" -> schedule.setFifteen(false);
             case "15:30" -> schedule.setFifteenThirty(false);
+        }
+
+        scheduleRepository.saveAndFlush(schedule);
+
+        return schedule;
+    }
+
+    public Schedule SetScheduleToTrueByWeekdayAndTime(String weekday, String time) {
+        Schedule schedule = scheduleRepository.findScheduleByWeekday(weekday);
+
+        /*
+        String timeString = switch (time) {
+            case "08:00" -> {
+                if (schedule.getEight()) {
+                    yield "Sorry";
+                }
+                yield "ok";
+            }
+            case "08:30" -> "eight_thirty";
+            case "09:00" -> "nine";
+            case "15:00" -> "fifteen";
+            case "15:30" -> "fifteen_thirty";
+            default -> "ERROR could non determine you appointment!";
+        };*/
+
+        switch (time) {
+            case "08:00" -> schedule.setEight(true);
+            case "08:30" -> schedule.setEightThirty(true);
+            case "09:00" -> schedule.setNine(true);
+            case "15:00" -> schedule.setFifteen(true);
+            case "15:30" -> schedule.setFifteenThirty(true);
         }
 
         scheduleRepository.saveAndFlush(schedule);
@@ -77,6 +108,10 @@ public class ScheduleService {
     }
 
     public String UpdateScheduleByNewAppointment() {
+
+        
+
+
         return "";
     }
 }

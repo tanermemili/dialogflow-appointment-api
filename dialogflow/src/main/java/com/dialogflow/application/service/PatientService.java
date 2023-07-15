@@ -94,12 +94,43 @@ public class PatientService {
                 patient = patientRepository.findPatientByInsuranceNumber(insuranceNumber).get();
                 patientRepository.deletePatientByInsuranceNumber(insuranceNumber);
 
-                scheduleService.UpdateScheduleByWeekdayAndTime(patient.getWeekday(), patient.getTime());
+                scheduleService.SetScheduleToFalseByWeekdayAndTime(patient.getWeekday(), patient.getTime());
             }
         }
 
         return "Your appointment " + patient.getWeekday() + " at " + patient.getTime()
                 + " has been successfully canceled! Thank you for using our service. Have a nice day "
                 + patient.getFirstName() + "!";
+    }
+
+    public String addPatient(GoogleCloudDialogflowV2WebhookRequest request) {
+        List<GoogleCloudDialogflowV2Context> outputContext = request.getQueryResult().getOutputContexts();
+
+        Patient patient = null;
+        for (GoogleCloudDialogflowV2Context context : outputContext) {
+            String contextName = context.getName();
+
+            if (contextName.contains("await_info")) {
+                Map<String, Object> parameters = context.getParameters();
+
+                String numberString = (String)(parameters.get("number.original"));
+                int insuranceNumber = Integer.parseInt(numberString);
+
+                String firstName = (String)parameters.get("person.original");
+                String weekday = (String)parameters.get("weekday");
+                String time = (String)parameters.get("timeslot");
+
+                scheduleService.SetScheduleToTrueByWeekdayAndTime(weekday, time);
+
+
+                patient = new Patient(firstName, insuranceNumber, weekday, time);
+
+                patientRepository.saveAndFlush(patient);
+            }
+        }
+
+        return "You have successfully booked an appointment on " + patient.getWeekday() + " at " +
+                patient.getTime() + " with Dr. Smith! Thank you for using our service. " +
+                "Have a nice day!";
     }
 }

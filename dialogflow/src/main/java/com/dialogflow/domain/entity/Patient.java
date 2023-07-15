@@ -21,4 +21,11 @@ public class Patient {
     private String weekday;
 
     private String time;
+
+    public Patient(String firstName, int insuranceNumber, String weekday, String time) {
+        this.firstName = firstName;
+        this.insuranceNumber = insuranceNumber;
+        this.weekday = weekday;
+        this.time = time;
+    }
 }

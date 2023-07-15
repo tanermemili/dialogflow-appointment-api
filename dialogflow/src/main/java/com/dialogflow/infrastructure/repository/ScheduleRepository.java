@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
@@ -24,4 +25,27 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
     List<Schedule> findTopTwoSchedules();
 
     Schedule findScheduleByWeekday(String weekday);
+
+    @Query(value = "SELECT id, weekday, eight, eight_thirty, nine, fifteen, fifteen_thirty " +
+            "FROM public.schedule " +
+            "WHERE weekday = :weekday AND :timeslot = FALSE", nativeQuery = true)
+    Optional<Schedule> findScheduleByWeekdayAndTimeslot(@Param("weekday") String weekday, @Param("timeslot") String timeslot);
+
+    List<Schedule> findSchedulesByWeekday(String weekday);
+
+    @Query(value = """
+        SELECT id, weekday, eight, eight_thirty, nine, fifteen, fifteen_thirty
+        FROM   public.schedule
+        WHERE  :timeslot = FALSE
+        """, nativeQuery = true)
+    List<Schedule> findSchedulesByTimeslot(@Param("timeslot") String timeslot);
+    List<Schedule> findSchedulesByEight(Boolean eight);
+
+    List<Schedule> findSchedulesByEightThirty(Boolean eightThirty);
+
+    List<Schedule> findSchedulesByNine(Boolean nine);
+
+    List<Schedule> findSchedulesByFifteen(Boolean fifteen);
+
+    List<Schedule> findSchedulesByFifteenThirty(Boolean fifteenThirty);
 }

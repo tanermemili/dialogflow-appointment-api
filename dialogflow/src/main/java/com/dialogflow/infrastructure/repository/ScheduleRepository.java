@@ -35,8 +35,15 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
     @Query(value = """
         SELECT id, weekday, eight, eight_thirty, nine, fifteen, fifteen_thirty
-        FROM   public.schedule
-        WHERE  :timeslot = FALSE
+        FROM public.schedule
+        WHERE CASE
+            WHEN :timeslot = 'eight' THEN eight = FALSE
+            WHEN :timeslot = 'eight_thirty' THEN eight_thirty = FALSE
+            WHEN :timeslot = 'nine' THEN nine = FALSE
+            WHEN :timeslot = 'fifteen' THEN fifteen = FALSE
+            WHEN :timeslot = 'fifteen_thirty' THEN fifteen_thirty = FALSE
+            ELSE FALSE
+        END
         """, nativeQuery = true)
     List<Schedule> findSchedulesByTimeslot(@Param("timeslot") String timeslot);
     List<Schedule> findSchedulesByEight(Boolean eight);

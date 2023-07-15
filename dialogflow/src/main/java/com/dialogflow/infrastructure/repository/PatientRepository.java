@@ -11,4 +11,6 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
     Optional<Patient> findPatientByInsuranceNumber(int insuranceNumber);
 
     void deletePatientByInsuranceNumber(int insuranceNumber);
+
+    Optional<Patient> findPatientByWeekdayAndTime(String weekday, String time);
 }

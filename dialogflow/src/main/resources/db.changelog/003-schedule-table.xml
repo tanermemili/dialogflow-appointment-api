@@ -24,7 +24,7 @@
 
     <changeSet id="003-schedule-table-data" author="">
         <insert tableName="schedule">
-            <column name="weekday" value="monday"/>
+            <column name="weekday" value="Monday"/>
             <column name="eight" value="false"/>
             <column name="eight_thirty" value="true"/>
             <column name="nine" value="false"/>
@@ -33,7 +33,7 @@
         </insert>
 
         <insert tableName="schedule">
-            <column name="weekday" value="tuesday"/>
+            <column name="weekday" value="Tuesday"/>
             <column name="eight" value="false"/>
             <column name="eight_thirty" value="false"/>
             <column name="nine" value="false"/>
@@ -42,7 +42,7 @@
         </insert>
 
         <insert tableName="schedule">
-            <column name="weekday" value="wednesday"/>
+            <column name="weekday" value="Wednesday"/>
             <column name="eight" value="true"/>
             <column name="eight_thirty" value="true"/>
             <column name="nine" value="true"/>
@@ -51,7 +51,7 @@
         </insert>
 
         <insert tableName="schedule">
-            <column name="weekday" value="thursday"/>
+            <column name="weekday" value="Thursday"/>
             <column name="eight" value="true"/>
             <column name="eight_thirty" value="true"/>
             <column name="nine" value="false"/>
@@ -60,7 +60,7 @@
         </insert>
 
         <insert tableName="schedule">
-            <column name="weekday" value="friday"/>
+            <column name="weekday" value="Friday"/>
             <column name="eight" value="true"/>
             <column name="eight_thirty" value="true"/>
             <column name="nine" value="false"/>

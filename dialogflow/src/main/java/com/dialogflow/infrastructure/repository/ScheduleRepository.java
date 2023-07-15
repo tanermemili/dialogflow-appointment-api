@@ -13,15 +13,17 @@ import java.util.Optional;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
-    @Query(value = "SELECT id, weekday, eight, eight_thirty, nine, fifteen, fifteen_thirty, " +
-            "(CASE WHEN eight = FALSE THEN 1 ELSE 0 END + " +
-            "CASE WHEN eight_thirty = FALSE THEN 1 ELSE 0 END + " +
-            "CASE WHEN nine = FALSE THEN 1 ELSE 0 END + " +
-            "CASE WHEN fifteen = FALSE THEN 1 ELSE 0 END + " +
-            "CASE WHEN fifteen_thirty = FALSE THEN 1 ELSE 0 END) AS false_count " +
-            "FROM public.schedule " +
-            "ORDER BY false_count desc " +
-            "LIMIT 2", nativeQuery = true)
+    @Query(value = """
+        SELECT id, weekday, eight, eight_thirty, nine, fifteen, fifteen_thirty,
+            (CASE WHEN eight = FALSE THEN 1 ELSE 0 END +
+            CASE WHEN eight_thirty = FALSE THEN 1 ELSE 0 END +
+            CASE WHEN nine = FALSE THEN 1 ELSE 0 END +
+            CASE WHEN fifteen = FALSE THEN 1 ELSE 0 END +
+            CASE WHEN fifteen_thirty = FALSE THEN 1 ELSE 0 END) AS false_count
+        FROM public.schedule
+        ORDER BY false_count DESC
+        LIMIT 2
+        """, nativeQuery = true)
     List<Schedule> findTopTwoSchedules();
 
     Schedule findScheduleByWeekday(String weekday);
@@ -40,8 +42,6 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
         AND weekday = :weekday
         """, nativeQuery = true)
     Optional<Schedule> findScheduleByWeekdayAndTimeslot(@Param("weekday") String weekday, @Param("timeslot") String timeslot);
-
-    List<Schedule> findSchedulesByWeekday(String weekday);
 
     @Query(value = """
         SELECT id, weekday, eight, eight_thirty, nine, fifteen, fifteen_thirty

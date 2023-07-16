@@ -1,5 +1,6 @@
 package com.dialogflow.presentation.controller;
 
+import com.dialogflow.application.service.PatientService;
 import com.dialogflow.application.service.ScheduleService;
 import com.dialogflow.domain.entity.Schedule;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequestMapping("/api/schedule")
 public class ScheduleController {
     private final ScheduleService scheduleService;
+    private final PatientService patientService;
 
     @Operation(summary = "find all patients")
     @GetMapping("/all")
@@ -31,6 +33,6 @@ public class ScheduleController {
     @PatchMapping()
     public ResponseEntity<Schedule> UpdateScheduleByWeekdayAndTime(@RequestParam String weekday,
                                                                    @RequestParam String time) {
-        return ResponseEntity.ok(scheduleService.SetScheduleToFalseByWeekdayAndTime(weekday, time));
+        return ResponseEntity.ok(patientService.SetScheduleToFalseByWeekdayAndTime(weekday, time));
     }
 }

@@ -1,9 +1,8 @@
 package com.dialogflow.application.service;
 
-import com.dialogflow.domain.entity.Patient;
+import com.dialogflow.application.helper.ParameterHelper;
 import com.dialogflow.domain.entity.Schedule;
 import com.dialogflow.infrastructure.repository.ScheduleRepository;
-import com.google.api.services.dialogflow.v3.model.GoogleCloudDialogflowV2Context;
 import com.google.api.services.dialogflow.v3.model.GoogleCloudDialogflowV2WebhookRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,69 +26,20 @@ public class ScheduleService {
         return scheduleRepository.findTopTwoSchedules();
     }
 
-    public Schedule SetScheduleToFalseByWeekdayAndTime(String weekday, String time) {
-        Schedule schedule = scheduleRepository.findScheduleByWeekday(weekday);
-
-        switch (time) {
-            case "08:00" -> schedule.setEight(false);
-            case "08:30" -> schedule.setEightThirty(false);
-            case "09:00" -> schedule.setNine(false);
-            case "15:00" -> schedule.setFifteen(false);
-            case "15:30" -> schedule.setFifteenThirty(false);
-        }
-
-        scheduleRepository.saveAndFlush(schedule);
-
-        return schedule;
-    }
-
-    public Schedule SetScheduleToTrueByWeekdayAndTime(String weekday, String time) {
-        Schedule schedule = scheduleRepository.findScheduleByWeekday(weekday);
-
-        switch (time) {
-            case "08:00" -> schedule.setEight(true);
-            case "08:30" -> schedule.setEightThirty(true);
-            case "09:00" -> schedule.setNine(true);
-            case "15:00" -> schedule.setFifteen(true);
-            case "15:30" -> schedule.setFifteenThirty(true);
-        }
-
-        scheduleRepository.saveAndFlush(schedule);
-
-        return schedule;
-    }
-
     public String findTopTwoSchedules() {
         List<Schedule> schedules = scheduleRepository.findTopTwoSchedules();
 
         StringBuilder responseText = new StringBuilder("I would like to suggest you one of these " +
-                "dates, since we have a lot of capacity here: ");
+                "dates, since we have a lot of capacity here:\n\n");
 
         for (Schedule schedule : schedules) {
-            String eightString = "";
-            String eightThirtyString = "";
-            String nineString = "";
-            String fifteenString = "";
-            String fifteenThirtyString = "";
+            String scheduleString = extractScheduleString(schedule);
 
-            if (!schedule.getEight()) {
-                eightString = "08:00 - 08:30, ";
-            }
-            if (!schedule.getEightThirty()) {
-                eightThirtyString = "08:30 - 09:00, ";
-            }
-            if (!schedule.getNine()) {
-                nineString = "09:00 - 09:30, ";
-            }
-            if (!schedule.getFifteen()) {
-                fifteenString = "15:00 - 15:30, ";
-            }
-            if (!schedule.getFifteenThirty()) {
-                fifteenThirtyString = "15:30 - 16:00, ";
-            }
-
-            responseText.append(schedule.getWeekday() + ": " +
-                    eightString + eightThirtyString + nineString + fifteenString + fifteenThirtyString);
+            responseText.append(schedule.getWeekday())
+                    .append(": ")
+                    .append("\n")
+                    .append(scheduleString)
+                    .append("\n");
         }
 
         responseText.append("which of these dates are feasible for you? Or do you prefer another day/time?");
@@ -98,106 +48,134 @@ public class ScheduleService {
     }
 
     public String findScheduleByWeekdayAndTime(GoogleCloudDialogflowV2WebhookRequest request) {
-        List<GoogleCloudDialogflowV2Context> outputContext = request.getQueryResult().getOutputContexts();
-
         StringBuilder responseText = new StringBuilder();
 
-        for (GoogleCloudDialogflowV2Context context : outputContext) {
-            String contextName = context.getName();
+        Map<String, Object> parameters = ParameterHelper.getParametersFromRequest(request);
 
-            if (contextName.contains("await_info")) {
-                Map<String, Object> parameters = context.getParameters();
+        String weekday = (String) parameters.get("weekday");
+        String time = (String) parameters.get("timeslot");
 
-                String weekday = (String) parameters.get("weekday");
-                String time = (String) parameters.get("timeslot");
+        if (!weekday.isEmpty() && !time.isEmpty()) {
+            return handleScheduleByWeekdayAndTime(responseText, weekday, time);
+        } else if (!weekday.isEmpty()) {
+            return handleScheduleByWeekday(responseText, weekday);
+        } else if (!time.isEmpty()) {
+            return handleScheduleByTime(responseText, time);
+        }
 
-                if (!weekday.isEmpty() && !time.isEmpty()) {
-                    String timeString = switch (time) {
-                        case "08:00" -> "eight";
-                        case "08:30" -> "eight_thirty";
-                        case "09:00" -> "nine";
-                        case "15:00" -> "fifteen";
-                        case "15:30" -> "fifteen_thirty";
-                        default -> "00:00";
-                    };
+        return "I'm sorry, but it looks like something went wrong when you tried to check the day/time.";
+    }
 
-                    Optional<Schedule> schedule = scheduleRepository.findScheduleByWeekdayAndTimeslot(weekday, timeString);
+    private String handleScheduleByWeekdayAndTime(StringBuilder responseText, String weekday, String time) {
+        String timeString = getTimeString(time);
 
-                    if (!schedule.isEmpty()) {
-                        responseText.append("The time slot on " + weekday + " at " + time + " is available! " +
-                                            "Do you want to make a booking?");
-                    }
-                }
-                else if (!weekday.isEmpty() && time.isEmpty()) {
-                    Schedule schedule = scheduleRepository.findScheduleByWeekday(weekday);
+        if (timeString.isEmpty()) {
+            responseText.append("I'm sorry, but it seems like you didn't provide a correct " +
+                    "time slot. Please choose one of the (30min) time slots:\n" +
+                    "08:00,\n08:30,\n09:00,\n15:00,\n15:30");
+            return responseText.toString();
+        }
 
-                    String eightString = "";
-                    String eightThirtyString = "";
-                    String nineString = "";
-                    String fifteenString = "";
-                    String fifteenThirtyString = "";
+        Optional<Schedule> schedule = scheduleRepository.findScheduleByWeekdayAndTimeslot(weekday, timeString);
 
-                    if (schedule.getEight() && schedule.getEightThirty() &&
-                            schedule.getNine() && schedule.getFifteen() &&
-                            schedule.getFifteenThirty()) {
-                        responseText.append("I'm very sorry, but it looks like there are no free " +
-                                            "time slots available on " + schedule.getWeekday() +".");
-
-                        break;
-                    }
-
-                    if (!schedule.getEight()) {
-                        eightString = "08:00 - 08:30, ";
-                    }
-                    if (!schedule.getEightThirty()) {
-                        eightThirtyString = "08:30 - 09:00, ";
-                    }
-                    if (!schedule.getNine()) {
-                        nineString = "09:00 - 09:30, ";
-                    }
-                    if (!schedule.getFifteen()) {
-                        fifteenString = "15:00 - 15:30, ";
-                    }
-                    if (!schedule.getFifteenThirty()) {
-                        fifteenThirtyString = "15:30 - 16:00, ";
-                    }
-
-                    responseText.append("Thanks for asking. These are the available slots for " +
-                                        schedule.getWeekday() + ": " + eightString + eightThirtyString + nineString +
-                                        fifteenString + fifteenThirtyString + " do you want to make a booking?");
-                }
-                else if (weekday.isEmpty() && !time.isEmpty()) {
-
-                    String timeString = switch (time) {
-                        case "08:00" -> "eight";
-                        case "08:30" -> "eight_thirty";
-                        case "09:00" -> "nine";
-                        case "15:00" -> "fifteen";
-                        case "15:30" -> "fifteen_thirty";
-                        default -> "";
-                    };
-
-                    if (timeString.isEmpty()) {
-                        responseText.append("I'm sorry, but it seems like that you didn't provide a correct " +
-                                            "time slot. Please choose one of the (30min) time slots: " +
-                                            "08:00, 08:30, 09:00, 15:00, 15:30.");
-
-                        return responseText.toString();
-                    }
-
-                    List<Schedule> schedules = scheduleRepository.findSchedulesByTimeslot(timeString);
-                    responseText.append("Thanks for asking. These are the days which have an " +
-                                        "open slot at " + time + ": ");
-
-                    for (Schedule schedule : schedules) {
-                        responseText.append(schedule.getWeekday() + ", ");
-                    }
-
-                    responseText.append(" do you want to make a booking?");
-                }
-            }
+        if (schedule.isPresent()) {
+            responseText.append("The time slot on ")
+                    .append(weekday)
+                    .append(" at ")
+                    .append(time)
+                    .append(" is available! ")
+                    .append("Do you want to make a booking?");
+        }
+        else {
+            responseText.append("I'm very sorry, but it looks like that the time slot on ")
+                    .append(weekday)
+                    .append(" at ")
+                    .append(time)
+                    .append(" is already occupied.");
         }
 
         return responseText.toString();
+    }
+
+    private String handleScheduleByWeekday(StringBuilder responseText, String weekday) {
+        Schedule schedule = scheduleRepository.findScheduleByWeekday(weekday);
+
+        if (schedule.getEight() && schedule.getEightThirty() &&
+                schedule.getNine() && schedule.getFifteen() &&
+                schedule.getFifteenThirty()) {
+            responseText
+                    .append("I'm very sorry, but it looks like there are no free time slots available on ")
+                    .append(schedule.getWeekday())
+                    .append(".");
+        } else {
+            String scheduleString = extractScheduleString(schedule);
+
+            responseText.append("Thanks for asking. These are the available slots for ")
+                    .append(schedule.getWeekday())
+                    .append(":\n")
+                    .append(scheduleString)
+                    .append("\ndo you want to make a booking?");
+        }
+
+        return responseText.toString();
+    }
+
+    private String handleScheduleByTime(StringBuilder responseText, String time) {
+        String timeString = getTimeString(time);
+
+        if (timeString.isEmpty()) {
+            responseText.append("I'm sorry, but it seems like you didn't provide a correct " +
+                    "time slot. Please choose one of the (30min) time slots: " +
+                    "08:00, 08:30, 09:00, 15:00, 15:30.");
+            return responseText.toString();
+        }
+
+        List<Schedule> schedules = scheduleRepository.findSchedulesByTimeslot(timeString);
+
+        responseText.append("Thanks for asking. These are the days which have an open slot at ")
+                .append(time)
+                .append(":\n");
+
+        for (Schedule schedule : schedules) {
+            responseText.append(schedule.getWeekday())
+                    .append(",\n");
+        }
+
+        responseText.append("\ndo you want to make a booking?");
+
+        return responseText.toString();
+    }
+
+    private String getTimeString(String time) {
+        return switch (time) {
+            case "08:00" -> "eight";
+            case "08:30" -> "eight_thirty";
+            case "09:00" -> "nine";
+            case "15:00" -> "fifteen";
+            case "15:30" -> "fifteen_thirty";
+            default -> "";
+        };
+    }
+
+    private String extractScheduleString(Schedule schedule) {
+        StringBuilder scheduleString = new StringBuilder();
+
+        if (!schedule.getEight()) {
+            scheduleString.append("08:00 - 08:30, \n");
+        }
+        if (!schedule.getEightThirty()) {
+            scheduleString.append("08:30 - 09:00, \n");
+        }
+        if (!schedule.getNine()) {
+            scheduleString.append("09:00 - 09:30, \n");
+        }
+        if (!schedule.getFifteen()) {
+            scheduleString.append("15:00 - 15:30, \n");
+        }
+        if (!schedule.getFifteenThirty()) {
+            scheduleString.append("15:30 - 16:00, \n");
+        }
+
+        return scheduleString.toString();
     }
 }

@@ -1,4 +1,4 @@
-# dialogflow-appointment-api :date:
+# dialogflow-appointment-webhook :date:
 
 This is the REST API which provides the Webhook for Dialogflow in order to fulfill the users intents
 
@@ -27,5 +27,5 @@ This is the REST API which provides the Webhook for Dialogflow in order to fulfi
 Press ```CTRL + C``` in order to stop the application.
 
 5. Start the tunnel from Ngrok and forward it to the port 8080
-6. Make sure that you copy the link provided by Ngrok to your Webhook in Dialogflow
+6. Make sure that you copy the link provided by Ngrok to your Webhook in Dialogflow and add the ```/api/webhook``` suffix
 7. Type ```webhook test``` in the Dialogflow Console to check the connection to your local webservice

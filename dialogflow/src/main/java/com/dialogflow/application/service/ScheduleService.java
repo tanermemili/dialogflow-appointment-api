@@ -30,7 +30,7 @@ public class ScheduleService {
         List<Schedule> schedules = scheduleRepository.findTopTwoSchedules();
 
         StringBuilder responseText = new StringBuilder("I would like to suggest you one of these " +
-                "dates, since we have a lot of capacity here:\n");
+                "dates, since we have a lot of capacity here:\n\n");
 
         for (Schedule schedule : schedules) {
             String scheduleString = extractScheduleString(schedule);
@@ -39,7 +39,7 @@ public class ScheduleService {
                     .append(": ")
                     .append("\n")
                     .append(scheduleString)
-                    .append("\n\n");
+                    .append("\n");
         }
 
         responseText.append("which of these dates are feasible for you? Or do you prefer another day/time?");
@@ -86,6 +86,13 @@ public class ScheduleService {
                     .append(" is available! ")
                     .append("Do you want to make a booking?");
         }
+        else {
+            responseText.append("I'm very sorry, but it looks like that the time slot on ")
+                    .append(weekday)
+                    .append(" at ")
+                    .append(time)
+                    .append(" is already occupied.");
+        }
 
         return responseText.toString();
     }
@@ -103,9 +110,9 @@ public class ScheduleService {
         } else {
             String scheduleString = extractScheduleString(schedule);
 
-            responseText.append("Thanks for asking. These are the available slots for\n")
+            responseText.append("Thanks for asking. These are the available slots for ")
                     .append(schedule.getWeekday())
-                    .append(": ")
+                    .append(":\n")
                     .append(scheduleString)
                     .append("\ndo you want to make a booking?");
         }

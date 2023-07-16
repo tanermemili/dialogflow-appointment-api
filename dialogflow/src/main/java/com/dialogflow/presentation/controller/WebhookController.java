@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collections;
+import java.util.List;
 
-import static java.util.Arrays.asList;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +25,6 @@ import static java.util.Arrays.asList;
 public class WebhookController {
 
     private final JacksonFactory jacksonFactory;
-
     private final PatientService patientService;
     private final ScheduleService scheduleService;
 
@@ -42,15 +41,13 @@ public class WebhookController {
         String responseText;
 
         switch (intentName) {
-            case "getAllPatients" -> { responseText = patientService.findPatients(); }
-            case "NameAndInsuranceYes" -> { responseText = patientService.findPatient(request); }
-            case "NameAndInsuranceYesCancel" -> { responseText = patientService.deletePatient(request); }
-            case "NameAndInsuranceYesSchedule" -> { responseText = scheduleService.findTopTwoSchedules(); }
-            case "NameAndInsuranceYesScheduleBooking" -> { responseText = patientService.addPatient(request); }
-            case "NameAndInsuranceYesScheduleAskDayAndTime" -> {
-                responseText = scheduleService.findScheduleByWeekdayAndTime(request);
-            }
-            default -> { responseText = "I'm sorry, I don't understand your request."; }
+            case "getAllPatients" -> responseText = patientService.findPatients();
+            case "NameAndInsuranceYes" -> responseText = patientService.findPatient(request);
+            case "NameAndInsuranceYesCancel" -> responseText = patientService.deletePatient(request);
+            case "NameAndInsuranceYesSchedule" -> responseText = scheduleService.findTopTwoSchedules();
+            case "NameAndInsuranceYesScheduleBooking" -> responseText = patientService.addPatient(request);
+            case "NameAndInsuranceYesScheduleAskDayAndTime" -> responseText = scheduleService.findScheduleByWeekdayAndTime(request);
+            default -> responseText = "I'm sorry, I don't understand your request.";
         }
 
         //Step 3. Build the response message
@@ -60,7 +57,7 @@ public class WebhookController {
         msg.setText(text);
 
         GoogleCloudDialogflowV2WebhookResponse response = new GoogleCloudDialogflowV2WebhookResponse();
-        response.setFulfillmentMessages(asList(msg));
+        response.setFulfillmentMessages(List.of(msg));
 
         StringWriter stringWriter = new StringWriter();
         JsonGenerator jsonGenerator = jacksonFactory.createJsonGenerator(stringWriter);

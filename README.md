@@ -11,6 +11,7 @@ This is the REST API which provides the Webhook for Dialogflow in order to fulfi
 - Spring Data JPA
 - Liquibase
 - Lombok
+- Swagger
 - Google API Services Dialogflow
 - Ngrok (Provides a secure tunnel to your localhost)
 

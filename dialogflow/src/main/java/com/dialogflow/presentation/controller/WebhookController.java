@@ -2,7 +2,6 @@ package com.dialogflow.presentation.controller;
 
 import com.dialogflow.application.service.PatientService;
 import com.dialogflow.application.service.ScheduleService;
-import com.dialogflow.domain.entity.Patient;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.dialogflow.v3.model.*;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 

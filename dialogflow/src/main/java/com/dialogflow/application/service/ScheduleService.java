@@ -1,6 +1,5 @@
 package com.dialogflow.application.service;
 
-import com.dialogflow.domain.entity.Patient;
 import com.dialogflow.domain.entity.Schedule;
 import com.dialogflow.infrastructure.repository.ScheduleRepository;
 import com.google.api.services.dialogflow.v3.model.GoogleCloudDialogflowV2Context;

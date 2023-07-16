@@ -30,14 +30,16 @@ public class ScheduleService {
         List<Schedule> schedules = scheduleRepository.findTopTwoSchedules();
 
         StringBuilder responseText = new StringBuilder("I would like to suggest you one of these " +
-                "dates, since we have a lot of capacity here: ");
+                "dates, since we have a lot of capacity here:\n");
 
         for (Schedule schedule : schedules) {
             String scheduleString = extractScheduleString(schedule);
 
             responseText.append(schedule.getWeekday())
                     .append(": ")
-                    .append(scheduleString);
+                    .append("\n")
+                    .append(scheduleString)
+                    .append("\n\n");
         }
 
         responseText.append("which of these dates are feasible for you? Or do you prefer another day/time?");
@@ -69,8 +71,8 @@ public class ScheduleService {
 
         if (timeString.isEmpty()) {
             responseText.append("I'm sorry, but it seems like you didn't provide a correct " +
-                    "time slot. Please choose one of the (30min) time slots: " +
-                    "08:00, 08:30, 09:00, 15:00, 15:30.");
+                    "time slot. Please choose one of the (30min) time slots:\n" +
+                    "08:00,\n08:30,\n09:00,\n15:00,\n15:30");
             return responseText.toString();
         }
 
@@ -101,11 +103,11 @@ public class ScheduleService {
         } else {
             String scheduleString = extractScheduleString(schedule);
 
-            responseText.append("Thanks for asking. These are the available slots for ")
+            responseText.append("Thanks for asking. These are the available slots for\n")
                     .append(schedule.getWeekday())
                     .append(": ")
                     .append(scheduleString)
-                    .append(" do you want to make a booking?");
+                    .append("\ndo you want to make a booking?");
         }
 
         return responseText.toString();
@@ -125,14 +127,14 @@ public class ScheduleService {
 
         responseText.append("Thanks for asking. These are the days which have an open slot at ")
                 .append(time)
-                .append(": ");
+                .append(":\n");
 
         for (Schedule schedule : schedules) {
             responseText.append(schedule.getWeekday())
-                    .append(", ");
+                    .append(",\n");
         }
 
-        responseText.append(" do you want to make a booking?");
+        responseText.append("\ndo you want to make a booking?");
 
         return responseText.toString();
     }
@@ -152,19 +154,19 @@ public class ScheduleService {
         StringBuilder scheduleString = new StringBuilder();
 
         if (!schedule.getEight()) {
-            scheduleString.append("08:00 - 08:30, ");
+            scheduleString.append("08:00 - 08:30, \n");
         }
         if (!schedule.getEightThirty()) {
-            scheduleString.append("08:30 - 09:00, ");
+            scheduleString.append("08:30 - 09:00, \n");
         }
         if (!schedule.getNine()) {
-            scheduleString.append("09:00 - 09:30, ");
+            scheduleString.append("09:00 - 09:30, \n");
         }
         if (!schedule.getFifteen()) {
-            scheduleString.append("15:00 - 15:30, ");
+            scheduleString.append("15:00 - 15:30, \n");
         }
         if (!schedule.getFifteenThirty()) {
-            scheduleString.append("15:30 - 16:00, ");
+            scheduleString.append("15:30 - 16:00, \n");
         }
 
         return scheduleString.toString();

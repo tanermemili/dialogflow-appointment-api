@@ -102,6 +102,28 @@ public class PatientService {
             return "I'm very sorry, but the timeslot on " + weekday + " at " + time + " is already reserved.";
         }
 
+        Optional<Patient> checkExistingPatient = patientRepository.findPatientByInsuranceNumber(insuranceNumber);
+
+        if (checkExistingPatient.isPresent()) {
+            Patient patient = checkExistingPatient.get();
+
+            // Remove the previous schedule from schedule table
+            SetScheduleToFalseByWeekdayAndTime(patient.getWeekday(), patient.getTime());
+
+            // Set the new day/time in patient table
+            patient.setWeekday(weekday);
+            patient.setTime(time);
+
+            // Set the new day/time in the schedule table
+            SetScheduleToTrueByWeekdayAndTime(weekday, time);
+
+            patientRepository.saveAndFlush(patient);
+
+            return "You have successfully rescheduled your appointment to " + patient.getWeekday() + " at " +
+                    patient.getTime() + " with Dr. Smith! Thank you for using our service. " +
+                    "Have a nice day!";
+        }
+
         SetScheduleToTrueByWeekdayAndTime(weekday, time);
 
         Patient patient = new Patient(firstName, insuranceNumber, weekday, time);

@@ -86,7 +86,7 @@ public class PatientService {
         return "I'm sorry, but something went wrong when trying to cancel your appointment.";
     }
 
-    public String addPatient(GoogleCloudDialogflowV2WebhookRequest request) {
+    public String upsertPatient(GoogleCloudDialogflowV2WebhookRequest request) {
         Map<String, Object> parameters = ParameterHelper.getParametersFromRequest(request);
 
         String numberString = (String) (parameters.get("number.original"));

@@ -45,7 +45,7 @@ public class WebhookController {
             case "NameAndInsuranceYes" -> responseText = patientService.findPatient(request);
             case "NameAndInsuranceYesCancel" -> responseText = patientService.deletePatient(request);
             case "NameAndInsuranceYesSchedule" -> responseText = scheduleService.findTopTwoSchedules();
-            case "NameAndInsuranceYesScheduleBooking" -> responseText = patientService.addPatient(request);
+            case "NameAndInsuranceYesScheduleBooking" -> responseText = patientService.upsertPatient(request);
             case "NameAndInsuranceYesScheduleAskDayAndTime" -> responseText = scheduleService.findScheduleByWeekdayAndTime(request);
             case "WebhookTest" -> responseText = "Successfully tested connection to your Webhook!";
             default -> responseText = "I'm sorry, I don't understand your request.";
